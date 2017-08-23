@@ -1,0 +1,58 @@
+08/02/2014	- Modified 'stats', fixed last month pay to use previous year if current month is Feb..Dec
+
+19/01/2014	- Modified 'manage_rota' and 'manage_rota.html', changed break_time from input field to select drop-down
+		- Modified all records in 'rota' database table, changed break_time from mins to 0.25 (15 mins), 0.75 (45 mins) etc.
+		- Wrote a script 'update_rota.pl' to update all records to reduce 'break_time' from 'total_hours' so total pay doesn't include break_time
+
+30/11/2013	- Modified 'stats', added 'Total bonus received', total bonus in current year and last year
+
+21/09/2013	- Modified 'manage_rota', added new field 'Break time'
+
+13/08/2013	- Modified 'rota' and 'manage_rota' to add some 'Add new' links on the rota calendar
+		- Modified 'manage_rota', added new field 'Directories'
+		- Modified 'stats', added 'Total directories'
+
+15/06/2013	- Modified 'Stats', fixed issue with wrong current year pay
+
+20/01/2013	- Modified 'Stats', added 'Salary (to date)' and 'Total pay (to date)'
+		- Modified 'Payslips' to fix issues with 'Total gross, total net, total tax and total NI'
+		- Modified 'Payslips' to add 'Employer'
+
+15/01/2013	- Modified 'Manage Rota' to add 2 radio buttons for 'Working' and 'Holiday' and the functionality
+		- Modified Stats and Rota scripts to take Holiday into account
+
+28/12/2012	- Added 'Last working day' on 'Stats'
+		- Converted DIVs into TABLES on 'Stats' for better view on mobile browsers
+
+24/12/2012	- Improved UI on Rota Calendar
+
+23/12/2012	- Added bonus to total_income on 'Stats'
+		- Added 'Worked this year' on 'Stats'
+		- Created 'Payslips' feature
+		- Added 'Latest payslip' item to 'Stats'
+
+22/12/2012	- Added 'Delete' Rota functionality to 'Manage Rota'
+		- Completed 'Stats' with all correct calculations including monthly income, yearly and last year's income
+		- Added 'Currency' and 'Start-up page' options and functionality to 'Settings'
+
+18/12/2012	- Updated Stats, added day (e.g., Wed, Tue), colours, links, Today and income_today
+
+15/12/2012	- Wrote requirements for 'Stats' page
+		- Renamed main folder from 'Workapp' to 'workapp' (all lowercase)
+		- Initiated and half completed the 'Stats' including Total days/hours worked/scheduled,
+		  date joined, data last updated, today, next working day, today's pay and list of Salaries.
+
+08/12/2012	- Modified database tables, renamed 'salary_rate' to 'account_settings', add employee and employers
+		- Completed 'Settings'
+		- Modified 'Add Rota'
+		- Added jQuery datepicker and timepicker with slider, downloaded from:
+			- http://jqueryui.com/download/
+			- http://trentrichardson.com/examples/timepicker/#basic_examples
+		- Created 'View Rota' page with jQuery calendar and events
+
+07/12/2012	- Changed the app name to Workapp
+		- Created database and tables
+		- Created settings
+		- Initiated 'Add Rota'
+
+06/12/2012	- Initiated working on the WorkCalendar, created template with heading, menu and CSS stylesheet

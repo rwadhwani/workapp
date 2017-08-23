@@ -1,0 +1,95 @@
+<form name="rotafrm" method="post" action="!path!/manage_rota" autocomplete="off">
+    <input type="hidden" name="rota_id" value="" />
+    <input type="hidden" name="action" value="" />
+
+    <div class="fleft">Employer:</div>
+    <div class="fright">
+        <select name="employer">
+            <!--EMPLOYERS_LIST-->
+        </select>
+    </div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Date of work:</div>
+    <div class="fright"><input type="text" id="workdate" name="workdate" value="" maxlength="10" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Start time:</div>
+    <div class="fright"><input type="text" id="start_time" name="start_time" value="" maxlength="5" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Stop time:</div>
+    <div class="fright"><input type="text" id="stop_time" name="stop_time" value="" maxlength="5" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft"> </div>
+    <div class="fright">
+        <input type="radio" name="holiday" value="0" /> Working
+        <input type="radio" name="holiday" value="1" style="margin-left:22px;" /> Holiday
+    </div>
+    <div class="fclear"></div>
+    
+    <!--BEGIN_TOTAL_HOURS-->
+    <div class="fleft">Total working hours:</div>
+    <div class="fright"><input type="text" name="total_hours" value="" class="label" readonly="readonly" /></div>
+    <div class="fclear"></div>
+    <!--END_TOTAL_HOURS-->
+    
+    <div class="fleft">Current salary (per/hour):</div>
+    <div class="fright"><input type="text" name="salary" value="" class="label bold" readonly="readonly" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Venue:</div>
+    <div class="fright"><input type="text" name="venue" value="" maxlength="50" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Bonus (if any):</div>
+    <div class="fright"><input type="text" name="bonus" value="" style="background-color:#f1f1f1;" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Directories (if any):</div>
+    <div class="fright"><input type="text" name="directories" value="" maxlength="3" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Break time:</div>
+    <div class="fright">
+        <select name="break_time">
+            <option value="0.00">-- No break --</option>
+            <option value="0.25">15 mins</option>
+            <option value="0.50">30 mins</option>
+            <option value="0.75">45 mins</option>
+            <option value="1.00">60 mins</option>
+        </select>
+    </div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Notes:</div>
+    <div class="fright"><textarea name="notes"></textarea></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft"></div>
+    <div class="fright" style="padding-top:10px;">
+        <input type="submit" value="ADD" class="button" style="float:left;" />
+        <!--BEGIN_DELETE--><input type="button" value="DELETE" class="button redbg" style="float:right;" onclick="deleteRota();" /><!--END_DELETE-->
+        <div class="clear" style="height:0;"></div>
+    </div>
+    <div class="fclear"></div>
+</form>
+
+<script type="text/javascript" src="!path!/includes/jquery-ui.js"></script>
+<script type="text/javascript" src="!path!/includes/jquery-ui-timepicker.js"></script>
+<script type="text/javascript" src="!path!/includes/jquery-ui-slider.js"></script>
+<script type="text/javascript">
+$(function() {
+    $( "#workdate" ).datepicker({ dateFormat: "dd/mm/yy" });
+    $('#start_time').timepicker({ hourMin:6,hourMax:23,stepMinute:15,addSliderAccess:true,sliderAccessArgs:{touchonly:false} });
+    $('#stop_time').timepicker({ hourMin:6,hourMax:23,stepMinute:15,addSliderAccess:true,sliderAccessArgs:{touchonly:false} });
+});
+
+function deleteRota() {
+    if (confirm("Delete this rota?")) {
+        document.rotafrm.action.value = "delete";
+        document.rotafrm.submit();
+    }
+}
+</script>

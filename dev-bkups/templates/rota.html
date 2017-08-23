@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="test/css" href="!path!/includes/fullcalendar/fullcalendar.css" />
+    <link rel="stylesheet" type="test/css" href="!path!/includes/fullcalendar/cupertino/theme.css" />
+    
+    <script type="text/javascript" src="!path!/includes/fullcalendar/jquery-ui.js"></script>
+    <script type="text/javascript" src="!path!/includes/fullcalendar/fullcalendar.js"></script>
+    <script type='text/javascript'>
+    	$(document).ready(function() {
+    	
+    		/*var date = new Date();
+    		var d = date.getDate();
+    		var m = date.getMonth();
+    		var y = date.getFullYear();*/
+    		
+    		$('#calendar').fullCalendar({
+    			theme: true,
+    			header: {
+    				left: 'prev,next today',
+    				center: 'title',
+    				right: 'month,basicWeek,basicDay'
+    			},
+    			editable: false,
+    			events: [
+                    //<!--EVENTS-->
+    			]
+    		});
+    		
+    	});
+    </script>
+    
+    <div id="calendar"></div>

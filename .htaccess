@@ -1,0 +1,23 @@
+Options ExecCGI FollowSymLinks
+
+<FilesMatch ^(stats|rota|manage_rota|payslips|settings)$>
+	ForceType application/cgi-script
+	SetHandler cgi-script
+</FilesMatch>
+
+#AuthName "WorkCalendar Access"
+#AuthType Basic
+#AuthMySQLHost localhost
+#AuthMySQLDB workcalendar
+#AuthMySQLUserTable users
+#AuthMySQLEnable On
+#AuthMySQLNameField username
+#AuthMySQLPasswordField password
+#AuthMySQLNoPasswd Off
+#AuthMySQLPwEncryption scrambled
+#require valid-user
+
+AuthUserFile /wamp/www/workapp/.htpasswd
+AuthType Basic
+AuthName "Localhost Access"
+require valid-user

@@ -1,0 +1,58 @@
+Blue / white colour
+
+Stats
+==============
+Employer: NEXT (Currently employed here?)
+Date Joined: DATE (years, months, days since join date)
+
+Today: TIME? Or Not working...
+Next working day: DATE (link)
+Total days/hours scheduled this month: DAYS / HOURS:MINS
+Total days/hours worked this month: DAYS / HOURS:MINS
+Total days/hours worked last month: DAYS / HOURS:MINS
+
+Today's Pay: 
+Current month pay: 
+Current year pay: 
+Last year pay: 
+Salary: 	£.. (From DATE to DATE) (Current salary?)
+	£.. (From DATe to DATE)...
+
+App last updated: DATE
+
+by employer?
+Date range (Use Ajax?)
+Previous year?
+
+
+Payslip / Income
+	Payment amount
+	Date
+	TAX Paid
+	NI Paid
+
+
+Work Schedule / Rota
+	Employer
+	Date
+	Hour:Min
+
+Add new
+	Employer (NEXT)
+	Date
+	Hour:Min (2)
+	Venue (London Westfield)
+	Notes
+	Bonus
+	Salary per/hour
+
+Settings
+	Salary per/hour
+	App name
+	Employee name
+	Manage Venue
+
+	Start up page: list
+	currency: 
+
+Reminder?

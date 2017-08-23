@@ -1,0 +1,128 @@
+/* ******************************************************************************************
+ *	File             :	style.css
+ *	Purpose          :	Cascade Style Sheet file for Workapp
+ *
+ *	Author           :	Rajesh Wadhwani
+ *	Created          :	06-Dec-2012
+ *	Modified         :	15-Dec-2012, 28-Dec-2012
+ *  Version notes    :  1.0 [06-Dec-2012] Initiated
+ *	Copyright        :	Rajesh Wadhwani, Lavina Wadhwani, 2012
+ * ****************************************************************************************** */
+
+body {
+    width: 99%;
+    min-width: 310px !important;
+	max-width: 960px !important;
+	margin: 5px;
+	font-family: Arial, Verdana, "Times New Roman";
+	font-size: 13px;
+	background-color: #fff;
+	color:#111;
+    line-height:1.50em;
+}
+
+* { margin:0; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.underline { text-decoration: underline; }
+
+.float-left { float:left; }
+.float-right { float:right; }
+.clear { clear:both; }
+.left { text-align: left; }
+.right { text-align: right; }
+.center { text-align: center; }
+
+.white { color:#fff; }
+.light-grey { color:#888; }
+.green { color:#0F7700; }
+.red { color:#C50505; }
+.redbg { background-color:#C50505 !important; }
+.blue, h1, h1 a, h1 a:hover, #menubar li a:hover, #menubar li a.active { color:#2d72ad; }
+.bluebg, #menubar, .button { background-color:#2d72ad; }
+
+h1 { font-size:25px; margin:14px 0 16px 0; text-shadow:2px 2px 1px #ccc; -webkit-text-shadow:2px 2px 1px #ccc; -khtml-text-shadow:2px 2px 1px #ccc; font-style:italic; }
+h3 { font-size:14px; padding:2px 0; margin:12px 0 2px 0; background-color:#eee; border-top:1px solid #eee; border-bottom:1px solid #ddd; }
+h4 { font-size:12px; padding:2px 0; margin:2px 0; font-weight:normal !important; background-color:#f1f1f1; border-top:1px solid #eee; border-bottom:1px solid #bbb; }
+p { margin:14px 0; }
+a { text-decoration:none; color:#2d72ad; }
+a:hover, a.active { text-decoration:underline; }        /* color:#111; */
+h1 a:hover { text-decoration:none !important; }
+
+#menu-container { margin:10px 0 22px 0; border-color:#2d72ad; border-style: solid; border-width:1px 0; padding:1px 0; }
+#menubar { list-style:none; padding:0; }
+#menubar li { float:left; margin:0; padding:0; }
+#menubar li a { display:block; margin-left:-1px; padding:4px 6px; text-decoration:none; font-weight:bold; color:#fff; border-left:1px solid #fff; border-right:1px solid #fff; }
+#menubar li a:hover, #menubar li a.active { background-color:#eee; }
+#menubar li a.active { margin:0 2px 0 1px; }
+
+.fleft { float:left; width:162px; min-width:140px !important; padding-top:1px; }
+.fright { float:left; width:45%; max-width:700px !important;}
+.fclear { clear:both; height:6px; }
+
+input[type="text"], select, textarea { background-color:#fff; width:100%; border:1px solid #666; padding:4px; margin-top:-2px; box-shadow:1px 1px 1px #999; -webkit-box-shadow:1px 1px 1px #999; -khtml-box-shadow:1px 1px 1px #999; }
+input[type="checkbox"]:hover { box-shadow:0 0 4px #555; -webkit-box-shadow:0 0 4px #555; -khtml-box-shadow:0 0 4px #555; }
+input[type="text"] { width: 96%; }
+select { width:98.4%; }
+textarea { width:96%; height:32px; }
+.label { border:0 !important; box-shadow:none !important; -webkit-box-shadow:none !important; -khtml-box-shadow:none !important; padding-left:0 !important; }
+
+.button { min-width:43% !important; padding:3px; color:#fff; font-weight:bold; border-color:#555 #000 #000 #555; border-width:1px; border-style:solid !important; box-shadow:2px 2px 4px #999; -webkit-box-shadow:2px 2px 4px #999; -khtml-box-shadow:2px 2px 4px #999; }
+.button:hover { cursor:pointer; color:#aaa; }
+
+a.delbutton { padding:4px 0 4px 10px; color:#C50505; font-weight:bold; }
+
+/* ************************ */
+/* Alert messages	    */
+/* ************************ */
+#info_msg {
+	background-color: #007C00;
+	color: #fff;
+}
+#info_msg, #error_msg {
+	padding: 4px 6px;
+	border: 1px solid #a0a0a0;
+	font-weight: bold;
+	margin: 0 0 12px 0;
+	display: none;
+    font-size:12px;
+	box-shadow: 1px 1px 6px #999;
+    -webkit-box-shadow: 1px 1px 6px #999;
+	-khtml-box-shadow: 1px 1px 6px #999;
+}
+#error_msg {
+	background-color: #C50505;
+	color: #fff;
+}
+
+.stats-item { clear:both; padding:6px 0; border-bottom:1px solid #444; }
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+
+/*.stat-item { clear:both; padding:2px; border-bottom:1px solid #eee; }
+.stat-item:hover { background-color:#f9f9f9; }
+.sdesc { float:left; width:150px !important; }
+.svalue { float:left; width:auto; min-width:22%; text-align:left; }
+.sincome { float:right; text-align:right; width:auto; color:#aaa; }
+.sclear { clear:both; height:0; }*/
+
+#stats { width:100%; margin:0; }
+#stats tr:hover { background-color:#f6f6f6; }
+#stats tr td { vertical-align:top; padding:1px; border-bottom:1px solid #eee; }
+#stats tr td.sdesc { width:148px !important; }
+#stats tr td.svalue { text-align:left; }
+#stats tr td.sincome { text-align:right; color:#aaa; }      /* width:70px; */
+
+.payslip_item { clear:both; padding:2px; border-bottom:1px solid #eee; }
+.payslip_item:hover { border-color:#ddd; background-color:#f1f1f1; cursor:pointer; }
+

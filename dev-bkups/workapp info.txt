@@ -1,0 +1,7 @@
+
+total days worked this month
+hours per/month
+total pay
+yearly pay
+
+by employer

@@ -1,0 +1,57 @@
+#!perl
+
+# Author        :   Rajesh Wadhwani
+# Created on    :   December 2012
+# Modified on   :   13-Aug-2013
+# Version notes :   1.0 [22-Dec-2012] Created
+#                   1.1 [13-Aug-2013] Added some 'Add new' links at the end of rota to take the user straight to 'Manage rota' to add new for that day.
+
+
+require("includes/shared.pl");
+
+$template = &openFile("templates/template.html");
+$content = &openFile("templates/$scriptname.html");
+$template =~ s|<link .*?jquery-ui.css".*?>|<link rel="stylesheet" type="test/css" href="$path/includes/fullcalendar/fullcalendar.css" />\n  <link rel="stylesheet" type="test/css" href="$path/includes/fullcalendar/cupertino/theme.css" />|;
+&initFunctions;
+
+$query = "select *, DATE_FORMAT(start_time,'%H:%i') as starttime, DATE_FORMAT(stop_time,'%H:%i') as stoptime,
+            DATE_FORMAT(workdate,'%Y') as workyear, DATE_FORMAT(workdate,'%m') as workmonth, DATE_FORMAT(workdate,'%d') as workday,
+            DATE_FORMAT(start_time,'%H') as starthh, DATE_FORMAT(start_time,'%i') as startmm,
+            DATE_FORMAT(stop_time,'%H') as stophh, DATE_FORMAT(stop_time,'%i') as stopmm from rota order by workdate ASC";
+$query = $dbh->prepare($query);
+$query->execute();
+$etotal = $query->rows();
+$ecounter = 0;
+while ($data = $query->fetchrow_hashref) {
+    $ecounter++;
+    if ($events ne "") { $events .= ",\n                "; }
+    if ($$data{holiday}) { $title = "* HOLIDAY AT $$data{employer}"; }
+    else {
+        $title = "$$data{employer} ($$data{starttime} - $$data{stoptime})";
+        if ($$data{directories} > 0) { $title .= " Directories: $$data{directories}   . "; }
+        if ($$data{bonus} > 0) { $title .= " Bonus: $DEFAULT_CURRENCY$$data{bonus}   . "; }
+    }
+    
+    if ($ecounter == $etotal) {
+        $lastevent_year = $$data{workyear};
+        $lastevent_month = $$data{workmonth};
+        $lastevent_day = $$data{workday};
+    }
+    $events .= "{ id:$$data{rota_id}, title:'$title', start:new Date($$data{workyear},$$data{workmonth}-1,$$data{workday},$$data{starthh},$$data{startmm}), end:new Date($$data{workyear},$$data{workmonth}-1,$$data{workday},$$data{stophh},$$data{stopmm}), url:'manage_rota?$$data{rota_id}' }";
+}
+
+if ($ecounter > 0) {
+    $lastevent_day += 2;                                        # leave some days, then start << Add new >> links
+    $dayuntil = $lastevent_day + 4;                             # add x number of 'Add new' links at the end of current rota
+    foreach my $day ($lastevent_day..$dayuntil) {
+        $day = ($day < 9)?'0'.$day:$day;
+        if ($events ne "") { $events .= ",\n                "; }
+        $events .= "{ id:00$day, title:'<< Add new >>', start:new Date($lastevent_year,${lastevent_month}-1,$day,09,00), end:new Date($lastevent_year,${lastevent_month}-1,$day,13,00), url:'manage_rota?date=$day/$lastevent_month/$lastevent_year' }";
+    }
+}
+
+$content =~ s|//<!--EVENTS-->|$events|;
+$template =~ s|<!--CONTENT-->|$content|;
+
+print "Content-type:text/html\n\n";
+print $template;

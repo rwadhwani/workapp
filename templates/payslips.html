@@ -1,0 +1,56 @@
+
+<!--BEGIN_PAYSLIP_FORM-->
+<form method="post" action="!path!/payslips">
+    <input type="hidden" name="payslip_id" value="" />
+    
+    <div class="fleft">Employer:</div>
+    <div class="fright">
+        <select name="employer">
+            <!--EMPLOYERS_LIST-->
+        </select>
+    </div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Payment date:</div>
+    <div class="fright"><input type="text" id="date" name="date" value="" maxlength="10" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Gross payment:</div>
+    <div class="fright"><input type="text" name="gross_payment" value="" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Net payment (after Tax):</div>
+    <div class="fright"><input type="text" name="net_payment" value="" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Tax:</div>
+    <div class="fright"><input type="text" name="tax" value="" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">Employee NI:</div>
+    <div class="fright"><input type="text" name="NI" value="" /></div>
+    <div class="fclear"></div>
+    
+    <div class="fleft">&nbsp;</div>
+    <div class="fright" style="padding-top:10px;"><input type="submit" value="ADD" class="button" /></div>
+    <div class="fclear"></div>
+</form>
+
+<script type="text/javascript" src="!path!/includes/jquery-ui.js"></script>
+<script type="text/javascript">
+$(function() {
+    $( "#date" ).datepicker({ dateFormat: "dd/mm/yy" });
+});
+</script>
+<!--END_PAYSLIP_FORM-->
+
+
+<!--BEGIN_PAYSLIP_ITEM-->
+<div class="payslip_item" onclick="window.location='!path!/payslips?<!--[payslip_id]-->'">
+    <div style="float:left; width:130px;"><span class="bold">Date:</span><br /><!--[pdate]--></div>
+    <div style="float:right; width:80px; text-align:right;"><br /><!--[currency]--><!--[net_payment]--></div>
+    <div style="float:right; width:80px;"><span class="bold">NI:</span><br /><!--[currency]--><!--[NI]--></div>
+    <div style="float:right; width:80px;"><span class="bold">Tax:</span><br /><!--[currency]--><!--[tax]--></div>
+    <div class="clear" style="height:0;"></div>
+</div>
+<!--END_PAYSLIP_ITEM-->

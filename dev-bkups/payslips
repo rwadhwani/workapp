@@ -1,0 +1,157 @@
+#!perl
+
+require("includes/shared.pl");
+
+$template = &openFile("templates/template.html");
+$content = &openFile("templates/$scriptname.html");
+&initFunctions;
+
+if ($ENV{'REQUEST_METHOD'} eq "POST") {
+    &addUpdatePayslip;
+}
+
+@sfields = ("employer");
+@ifields = ("payslip_id", "date", "gross_payment", "net_payment", "tax", "NI");
+
+$squery = $dbh->prepare("select current_employer from settings limit 1");               # load current employer from settings to pre-select
+$squery->execute();
+$sdata = $squery->fetchrow_hashref;
+$current_employer = $$sdata{current_employer};
+
+if ($ENV{'QUERY_STRING'} =~ /^(\d{1,})$/ || $FORM{payslip_id} =~ /^(\d{1,})$/) {
+    # UPDATE EXISTING PAYSLIP
+    $payslip_id = $1;
+    $content =~ s|<!--BEGIN_PAYSLIP_ITEM-->.*?<!--END_PAYSLIP_ITEM-->||s;
+    $elist = &getEmployersList;
+    $content =~ s|<!--EMPLOYERS_LIST-->|$elist|;
+
+    $query = $dbh->prepare("select *, DATE_FORMAT(date,'%d/%m/%Y') as date from payslips where payslip_id='$payslip_id' limit 1");
+    $query->execute();
+    $rows = $query->rows();
+    if ($rows > 0) {
+        $data = $query->fetchrow_hashref;
+        $content =~ s|ADD|UPDATE|;
+        foreach (@sfields) { $content =~ s|<option value="$$data{$_}">|<option value="$$data{$_}" selected="selected">|; }
+        foreach (@ifields) { $content =~ s|name="$_" value=""|name="$_" value="$$data{$_}"|; }
+    } else {
+        &displayMsg(1, "Requested Payslip was not found!");
+    }
+} elsif ($ENV{'QUERY_STRING'} =~ /^(add|new)$/i) {
+    $content =~ s|<!--BEGIN_PAYSLIP_ITEM-->.*?<!--END_PAYSLIP_ITEM-->||s;
+    
+    $elist = &getEmployersList;
+    $elist =~ s|<option value="$current_employer">|<option value="$current_employer" selected="selected">|;
+    $content =~ s|<!--EMPLOYERS_LIST-->|$elist|;
+} else {
+    # list all Payslips
+    &displayMsg(0, "<a href=\"$path/$scriptname?new\" class=\"white\">Add new Payslip</a>");
+    $content =~ s|<!--BEGIN_PAYSLIP_FORM-->.*?<!--END_PAYSLIP_FORM-->||s;
+    $pquery = $dbh->prepare("select *, DATE_FORMAT(date,'%d %b %Y') as pdate, DATE_FORMAT(date,'%Y') as year from payslips where employer=\"$current_employer\" order by date DESC");
+    $pquery->execute();
+    $prows = $pquery->rows();
+    if ($prows > 0) {
+        $squery = $dbh->prepare("select currency from settings limit 1");       # get current currency from 'settings'
+        $squery->execute();
+        $sdata = $squery->fetchrow_hashref;
+        $total_gross = 0.00;
+        $total_tax = 0.00;
+        $total_NI = 0.00;
+        $total_net = 0.00;
+        
+        $content =~ /<!--BEGIN_PAYSLIP_ITEM-->(.*?)<!--END_PAYSLIP_ITEM-->/s;
+        $pitemplate = $1;
+        while ($pdata = $pquery->fetchrow_hashref) {
+            if ($prevyear eq "" || $prevyear eq $$pdata{year}) {            # first record OR still reading the current year
+                $total_gross += $$pdata{gross_payment};
+                $total_tax += $$pdata{tax};
+                $total_NI += $$pdata{NI};
+                $total_net += $$pdata{net_payment};
+            
+                $total_gross = &makePrice($total_gross);
+                $total_tax = &makePrice($total_tax);
+                $total_NI = &makePrice($total_NI);
+                $total_net = &makePrice($total_net);
+            }
+            $pyear = ($prevyear ne "")?$prevyear:$$pdata{year};
+            if ($prevyear ne "" && $prevyear ne $$pdata{year}) {            # next year...
+                $yearly_total = "<h4 class=\"center\"><span class=\"bold\">[Year $pyear] &nbsp;&nbsp; GROSS:</span> $$sdata{currency}$total_gross &nbsp;&nbsp; <span class=\"bold\">TAX:</span> $$sdata{currency}$total_tax &nbsp;&nbsp; <span class=\"bold\">NI:</span> $$sdata{currency}$total_NI &nbsp;&nbsp; <span class=\"bold\">NET:</span> $$sdata{currency}$total_net</h4>";
+                $pitems .= $yearly_total;
+                $total_gross = $$pdata{gross_payment};
+                $total_tax = $$pdata{tax};
+                $total_NI = $$pdata{NI};
+                $total_net = $$pdata{net_payment};
+                
+                $total_gross = &makePrice($total_gross);
+                $total_tax = &makePrice($total_tax);
+                $total_NI = &makePrice($total_NI);
+                $total_net = &makePrice($total_net);
+                $yearly_total = "<h4 class=\"center\"><span class=\"bold\">[Year $$pdata{year}] &nbsp;&nbsp; GROSS:</span> $$sdata{currency}$total_gross &nbsp;&nbsp; <span class=\"bold\">TAX:</span> $$sdata{currency}$total_tax &nbsp;&nbsp; <span class=\"bold\">NI:</span> $$sdata{currency}$total_NI &nbsp;&nbsp; <span class=\"bold\">NET:</span> $$sdata{currency}$total_net</h4>";
+            }
+            if ($prevyear ne $$pdata{year}) { $pitems .= "<h3 class=\"center\">$$pdata{year}</h3>"; }
+            $pitem = $pitemplate;
+            $pitem =~ s|<!--\[currency\]-->|$$sdata{currency}|g;
+            $pitem =~ s|<!--\[(.+?)\]-->|$$pdata{$1}|g;
+            $pitems .= $pitem."\n   ";
+            $prevyear = $$pdata{year};
+        }
+    }
+    $pitems .= $yearly_total;
+    $pitems =~ s|<!--currency-->|$$sdata{currency}|g;
+    $content =~ s|<!--BEGIN_PAYSLIP_ITEM-->.*?<!--END_PAYSLIP_ITEM-->|$pitems|s;
+}
+
+$template =~ s|<!--CONTENT-->|$content|;
+
+print "Content-type:text/html\n\n";
+print $template;
+
+
+sub addUpdatePayslip {
+    $error = 0;
+    $payslip_id = $FORM{payslip_id};
+    $employer = &formatText($FORM{employer});
+    $date = &formatText($FORM{date});
+    $gross_payment = &formatText($FORM{gross_payment});
+    $net_payment = &formatText($FORM{net_payment});
+    $tax = &formatText($FORM{tax});
+    $NI = &formatText($FORM{NI});
+    $gross_payment = ($gross_payment ne "")?$gross_payment:$net_payment;        # if gross payment was left blank then use the same net payment (no tax/NI deducted)
+    
+    if ($date =~ /^(\d{2}).(\d{2}).(\d{4})$/) {
+        $date = $3."-".$2."-".$1;                           # convert the user date to yyyy-mm-dd format
+    } else { $error = 1; }
+    
+    if (!$error) {                                          # no error
+        if ($payslip_id eq "") {                            # add new payslip
+            $query = $dbh->prepare("insert into payslips (employer, date, gross_payment, net_payment, tax, NI) values (\"$employer\", '$date', '$gross_payment', '$net_payment', '$tax', \"$NI\")");
+            $query->execute();
+            $rows = $query->rows();
+            if ($rows > 0) {
+                &displayMsg(0, "Payslip added.");
+                print "Location:$path/payslips\n\n";
+            } else {
+                &displayMsg(1, "Failed to add payslip!");
+                &preserveFormData;
+            }
+        } else {                                            # update existing rota
+            $query = $dbh->prepare("update payslips set employer=\"$employer\", date='$date', gross_payment='$gross_payment', net_payment='$net_payment', tax='$tax', NI=\"$NI\" where payslip_id='$payslip_id' limit 1");
+            $query->execute();
+            $rows = $query->rows();
+            if ($rows > 0) {
+                &displayMsg(0, "Payselip updated.");
+                print "Location:$path/payslips\n\n";
+            } else {
+                &displayMsg(1, "Failed to update Payslip!");
+                &preserveFormData;
+            }
+        }
+    } else {
+        if ($payslip_id eq "") { &displayMsg(1, "Failed to add Payslip! Check date/time format."); }    # add new Payslip failed!
+        else { &displayMsg(1, "Update failed! Check date/time format."); }                              # update rota failed!
+        &preserveFormData;
+    }
+}
+
+sub preserveFormData {
+    foreach (@ifields) { $tmpval="\$$_"; $tmpval=eval($tmpval); $content =~ s|name="$_" value=""|name="$_" value="$tmpval"|; }
+}

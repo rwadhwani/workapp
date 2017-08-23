@@ -1,0 +1,21 @@
+#Options FollowSymLinks
+
+#AuthName "Localhost Access"
+#AuthType Basic
+#AuthMySQLHost localhost
+#AuthMySQLDB expenses
+#AuthMySQLUserTable users
+#AuthMySQLEnable On
+#AuthMySQLNameField username
+#AuthMySQLPasswordField password
+#AuthMySQLNoPasswd Off
+#AuthMySQLPwEncryption scrambled
+
+AuthUserFile /wamp/www/.htpasswd
+AuthType Basic
+AuthName "Localhost Access"
+require valid-user
+
+#RewriteEngine on
+#RewriteCond %{SCRIPT_NAME} index.php
+#RewriteRule ^/$ /phillippa/ [L]
